@@ -34,7 +34,7 @@ class Game
 	end
 
   def start_moves
-    #loop do
+    loop do
 			game_board.display
       if cur_move == 0
         player_human.color.zero? ? @player_human.make_move : @player_computer.make_move
@@ -42,6 +42,6 @@ class Game
         player_human.color.zero? ? @player_computer.make_move : @player_human.make_move
       end
       @cur_move = (cur_move + 1) % 2
-    #end
+    end
   end
 end

@@ -8,6 +8,94 @@ class Queen
     @next_moves = []
   end
 
+  def update_next_moves(board)
+    @next_moves.clear
+    
+    #top left
+    row = position[0] + 1
+    col = position[1] - 1
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      row += 1
+      col -= 1
+    end
+
+    #top right
+    row = position[0] + 1
+    col = position[1] + 1
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      row += 1
+      col += 1
+    end
+
+    #bottom left
+    row = position[0] - 1
+    col = position[1] - 1
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      row -= 1
+      col -= 1
+    end
+
+    #bottom right
+    row = position[0] - 1
+    col = position[1] + 1
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      row -= 1
+      col += 1
+    end
+
+    #up
+    row = position[0] + 1
+    col = position[1]
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      row += 1
+    end
+
+    #right
+    row = position[0]
+    col = position[1] + 1
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      col += 1
+    end
+
+    #down
+    row = position[0] - 1
+    col = position[1]
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      row -= 1
+    end
+
+    #left
+    row = position[0] 
+    col = position[1] - 1
+    while valid_move?(board, row, col)
+      @next_moves.push([row, col])
+      break unless board.positions[row][col] == '.'
+      col -= 1
+    end
+    
+  end
+
+  def valid_move?(board, row, col)
+    return false if row.negative? || row > 7 || col.negative? || col > 7
+    return true if board.positions[row][col] == '.'
+    return false if board.positions[row][col].color == @color
+
+    true
+  end
 end
 
 class WhiteQueen < Queen

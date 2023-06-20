@@ -44,6 +44,7 @@ class Board
   #       piece.update_next_moves(self)
 	# 		end
 	# 	end
+  #   update_both_king_next_moves
 	# end
 
 	# def update_both_king_next_moves
@@ -131,3 +132,26 @@ class Board
   end
 
 end
+
+#testing next_move methods
+temp_board = Board.new
+
+# bishop = WhiteBishop.new(1, 2)
+# bishop.update_next_moves(temp_board)
+# p bishop.next_moves
+
+# rook = WhiteRook.new(3, 3)
+# rook.update_next_moves(temp_board)
+# p rook.next_moves
+
+# queen = WhiteQueen.new(3, 3)
+# queen.update_next_moves(temp_board)
+# p queen.next_moves
+
+# pawn = BlackPawn.new(2, 3)
+# pawn.update_next_moves(temp_board)
+# p pawn.next_moves
+
+knight = WhiteKnight.new(2, 2)
+knight.update_next_moves(temp_board)
+p knight.next_moves

@@ -8,6 +8,13 @@ class King
     @next_moves = []
   end
 
+  def valid_move?(board, row, col)
+    return false if row.negative? || row > 7 || col.negative? || col > 7
+    return true if board.positions[row][col] == '.'
+    return false if board.positions[row][col].color == @color
+
+    true
+  end
 end
 
 class WhiteKing < King
