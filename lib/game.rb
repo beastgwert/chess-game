@@ -18,8 +18,8 @@ class Game
     puts "\nYou can save the game at any time by entering \"save_game\" into the terminal"
 
     inp_color = prompt_color
-    @player_human.color = inp_color.to_i
-    @player_computer.color = 1 - player_human.color.to_i
+    @player_human.color = inp_color == '0' ? 'white' : 'black'
+    @player_computer.color = inp_color == '0' ? 'black' : 'white'
 
     start_moves
   end
@@ -37,9 +37,14 @@ class Game
     loop do
 			game_board.display
       if cur_move == 0
-        player_human.color.zero? ? @player_human.make_move : @player_computer.make_move
+        player_human.color == "white" ? @player_human.make_move(game_board) : @player_computer.make_move(game_board)
       else
-        player_human.color.zero? ? @player_computer.make_move : @player_human.make_move
+        player_human.color == "white" ? @player_computer.make_move(game_board) : @player_human.make_move(game_board)
+      end
+      cur_turn = cur_move % 2 == 0 ? 'white' : 'black'
+      if game_board.check_mate?(cur_turn)
+        puts cur_turn == player_human.color ? "Congrats! You won against the computer!" : "LMAOOOO you're terrible at chess you lost against a bot"
+        exit
       end
       @cur_move = (cur_move + 1) % 2
     end

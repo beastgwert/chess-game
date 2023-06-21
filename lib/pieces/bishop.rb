@@ -8,6 +8,12 @@ class Bishop
     @next_moves = []
   end
 
+  def update_position(board, new_position, old_position)
+    @position = new_position
+    board.positions[new_position[0]][new_position[1]] = self
+    board.positions[old_position[0]][old_position[1]] = '.'
+  end
+  
   def update_next_moves(board)
     @next_moves.clear
 

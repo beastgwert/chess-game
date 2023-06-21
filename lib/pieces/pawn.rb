@@ -8,6 +8,12 @@ class Pawn
     @next_moves = []
   end
 
+  def update_position(board, new_position, old_position)
+    @position = new_position
+    board.positions[new_position[0]][new_position[1]] = self
+    board.positions[old_position[0]][old_position[1]] = '.'
+  end
+  
   def empty_square?(board, row, col)
     return false if row > 7 || col.negative? || row > 7 || col.negative?
 
@@ -15,8 +21,7 @@ class Pawn
   end
 
   def opponent_piece?(board, row, col)
-    return false if row > 7 || col.negative? || row > 7 || col.negative? || board.positions[row][col] == '.'
-
+    return false if row > 7 || row.negative? || col > 7 || col.negative? || board.positions[row][col] == '.'
     @color != board.positions[row][col].color
   end
 

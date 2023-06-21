@@ -1,13 +1,20 @@
 class Rook
-  attr_accessor :position, :symbol, :next_moves, :color
+  attr_accessor :position, :symbol, :next_moves, :color, :has_moved
 
   def initialize(start_position, symbol, color)
     @position = start_position
     @symbol = symbol
     @color = color
     @next_moves = []
+    @has_moved = false
   end
 
+  def update_position(board, new_position, old_position)
+    @position = new_position
+    board.positions[new_position[0]][new_position[1]] = self
+    board.positions[old_position[0]][old_position[1]] = '.'
+  end
+  
   def update_next_moves(board)
     @next_moves.clear
     
