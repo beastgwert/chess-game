@@ -15,7 +15,7 @@ class Board
       white: [] 
     }
 		place_all_pieces
-		#update_all_pieces_next_moves
+		update_all_pieces_next_moves
   end
 
 	def place_all_pieces
@@ -27,34 +27,35 @@ class Board
     place_all_pawns
 	end
 
-	# def update_all_pieces_next_moves
-	# 	@positions.each do |row|
-	# 		row.each do |piece|
-	# 			next if piece == '.'
+	def update_all_pieces_next_moves
+		@positions.each do |row|
+			row.each do |piece|
+				next if piece == '.'
 
-	# 			if piece.symbol == '♔'
-  #         @king_position[:white] = piece.current_position
-  #         next
-  #       end
-  #       if piece.symbol == '♚'
-  #         @king_position[:black] = piece.current_position
-  #         next
-  #       end
+				if piece.symbol == '♔'
+          @king_positions[:white] = piece.position
+          next
+        end
+        if piece.symbol == '♚'
+          @king_positions[:black] = piece.position
+          next
+        end
 
-  #       piece.update_next_moves(self)
-	# 		end
-	# 	end
-  #   update_both_king_next_moves
-	# end
+        piece.update_next_moves(self)
+			end
+		end
+    update_both_king_next_moves
+	end
 
-	# def update_both_king_next_moves
-  #   white_king = @positions[@king_position[:white][0]][@king_position[:white][1]]
-  #   black_king = @positions[@king_position[:black][0]][@king_position[:black][1]]
-  #   # Update white king's move
-  #   white_king.update_next_moves(self)
-  #   # Update black king's move
-  #   black_king.update_next_moves(self)
-  # end
+	def update_both_king_next_moves
+    white_king = @positions[@king_positions[:white][0]][@king_positions[:white][1]]
+    black_king = @positions[@king_positions[:black][0]][@king_positions[:black][1]]
+
+    # Update white king's move
+    white_king.update_next_moves(self)
+    # Update black king's move
+    black_king.update_next_moves(self)
+  end
 
 	def place_all_rooks
     @positions[0][0] = WhiteRook.new(0, 0)
@@ -131,10 +132,43 @@ class Board
     end
   end
 
+  def check_mate?(player_color)
+    availible_pieces = []
+    positions.each do |row|
+      row.each do |piece|
+        availible_pieces.push(piece) unless piece == '.' || piece.color == player_color || piece.next_moves == []
+      end
+    end
+
+    player_color == 'white' ? king_position = king_positions[:black] : king_position = king_positions[:white]
+    opp_king = positions[king_position[0]][king_position[1]]
+
+    availible_pieces.each do |piece|
+      piece.next_moves.each do |new_position|
+        new_piece = positions[new_position[0]][new_position[1]]
+        initial_position = piece.position
+
+        piece.update_position(self, new_position, initial_position)
+        update_all_pieces_next_moves
+
+        if !opp_king.in_check?(self)
+          piece.update_position(self, initial_position, new_position)
+          positions[new_position[0]][new_position[1]] = new_piece
+          update_all_pieces_next_moves  
+          return false 
+        end
+
+        piece.update_position(self, initial_position, new_position)
+        positions[new_position[0]][new_position[1]] = new_piece
+        update_all_pieces_next_moves  
+      end
+    end
+    true
+  end
 end
 
-#testing next_move methods
-temp_board = Board.new
+# Testing next_move methods
+# temp_board = Board.new
 
 # bishop = WhiteBishop.new(1, 2)
 # bishop.update_next_moves(temp_board)
@@ -152,6 +186,18 @@ temp_board = Board.new
 # pawn.update_next_moves(temp_board)
 # p pawn.next_moves
 
-knight = WhiteKnight.new(2, 2)
-knight.update_next_moves(temp_board)
-p knight.next_moves
+# knight = WhiteKnight.new(2, 2)
+# knight.update_next_moves(temp_board)
+# p knight.next_moves
+
+# temp_board.positions[0][1] = '.'
+# temp_board.positions[0][2] = '.'
+# temp_board.positions[0][3] = '.'
+# temp_board.positions[1][4] = '.'
+# temp_board.positions[3][6] = BlackBishop.new(3, 6)
+# temp_board.positions[3][6].update_next_moves(temp_board)
+# king = WhiteKing.new(0, 4)
+# king.update_next_moves(temp_board)
+# p king.next_moves
+
+# Testing checkmate
