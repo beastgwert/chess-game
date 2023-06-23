@@ -11,10 +11,29 @@ class King
 
   def update_position(board, new_position, old_position)
     @position = new_position
-    board.positions[new_position[0]][new_position[1]] = self
-    board.positions[old_position[0]][old_position[1]] = '.'
+    old_row = old_position[0]
+    old_col = old_position[1]
+    new_row = new_position[0]
+    new_col = new_position[1]
+
+    board.positions[new_row][new_col] = self
+    board.positions[old_row][old_col] = '.'
+
+    # Queenside castle
+    if new_col - old_col == -2
+      board.positions[new_row][new_col + 1] = board.positions[new_row][0]
+      board.positions[new_row][0] = '.'
+    end
+
+    # Kingside castle
+    if new_col - old_col == 2
+      board.positions[new_row][new_col - 1] = board.positions[new_row][7]
+      board.positions[new_row][7] = '.'
+    end
+
+    @has_moved = true
   end
-  
+
   def update_next_moves(board)
     @next_moves.clear
 
@@ -63,11 +82,11 @@ class King
           col2 = piece.position[1]
           attacked += [[row2 + 1, col2 - 1], [row2 + 1, col2 + 1]]
         end
-        if piece.instance_of?(BlackPawn)
-          row2 = piece.position[0]
-          col2 = piece.position[1]
-          attacked += [[row2 - 1, col2 - 1], [row2 - 1, col2 + 1]]
-        end
+        next unless piece.instance_of?(BlackPawn)
+
+        row2 = piece.position[0]
+        col2 = piece.position[1]
+        attacked += [[row2 - 1, col2 - 1], [row2 - 1, col2 + 1]]
       end
     end
     attacked.uniq
@@ -80,7 +99,9 @@ class WhiteKing < King
   end
 
   def left_castling_possible?(board)
-    return false if has_moved || board.positions[0][0] == '.' || !board.positions[0][0].is_a?(Rook) || board.positions[0][0].has_moved
+    if has_moved || board.positions[0][0] == '.' || !board.positions[0][0].is_a?(Rook) || board.positions[0][0].has_moved
+      return false
+    end
 
     # Check that nothing is between the king and rook
     (1..3).each do |i|
@@ -89,12 +110,14 @@ class WhiteKing < King
 
     # Check that nothing is attacking a square between the king and rook
     return false if (attacked_squares(board) & [[0, 2], [0, 3]]).any?
-    
+
     true
   end
 
   def right_castling_possible?(board)
-    return false if has_moved || board.positions[0][7] == '.' || !board.positions[0][7].is_a?(Rook) || board.positions[0][7].has_moved
+    if has_moved || board.positions[0][7] == '.' || !board.positions[0][7].is_a?(Rook) || board.positions[0][7].has_moved
+      return false
+    end
 
     # Check that nothing is between the king and rook
     (5..6).each do |i|
@@ -103,6 +126,7 @@ class WhiteKing < King
 
     # Check that nothing is attacking a square between the king and rook
     return false if (attacked_squares(board) & [[0, 5], [0, 6]]).any?
+
     true
   end
 end
@@ -113,7 +137,9 @@ class BlackKing < King
   end
 
   def left_castling_possible?(board)
-    return false if has_moved || board.positions[7][0] == '.' || !board.positions[7][0].is_a?(Rook) || board.positions[7][0].has_moved
+    if has_moved || board.positions[7][0] == '.' || !board.positions[7][0].is_a?(Rook) || board.positions[7][0].has_moved
+      return false
+    end
 
     # Check that nothing is between the king and rook
     (1..3).each do |i|
@@ -122,12 +148,14 @@ class BlackKing < King
 
     # Check that nothing is attacking a square between the king and rook
     return false if (attacked_squares(board) & [[7, 2], [7, 3]]).any?
-    
+
     true
   end
 
   def right_castling_possible?(board)
-    return false if has_moved || board.positions[7][7] == '.' || !board.positions[7][7].is_a?(Rook) || board.positions[7][7].has_moved
+    if has_moved || board.positions[7][7] == '.' || !board.positions[7][7].is_a?(Rook) || board.positions[7][7].has_moved
+      return false
+    end
 
     # Check that nothing is between the king and rook
     (5..6).each do |i|
@@ -136,6 +164,7 @@ class BlackKing < King
 
     # Check that nothing is attacking a square between the king and rook
     return false if (attacked_squares(board) & [[7, 5], [7, 6]]).any?
+
     true
   end
 end

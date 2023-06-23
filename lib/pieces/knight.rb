@@ -13,10 +13,10 @@ class Knight
     board.positions[new_position[0]][new_position[1]] = self
     board.positions[old_position[0]][old_position[1]] = '.'
   end
-  
+
   def update_next_moves(board)
     @next_moves.clear
-    
+
     row = position[0]
     col = position[1]
 
@@ -29,7 +29,7 @@ class Knight
     @next_moves.push([row + 1, col - 2]) if valid_move?(board, row + 1, col - 2)
     @next_moves.push([row + 2, col - 1]) if valid_move?(board, row + 2, col - 1)
   end
-  
+
   def valid_move?(board, row, col)
     return false if row.negative? || row > 7 || col.negative? || col > 7
     return true if board.positions[row][col] == '.'

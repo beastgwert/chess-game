@@ -13,46 +13,50 @@ class Bishop
     board.positions[new_position[0]][new_position[1]] = self
     board.positions[old_position[0]][old_position[1]] = '.'
   end
-  
+
   def update_next_moves(board)
     @next_moves.clear
 
-    #top left
+    # top left
     row = position[0] + 1
     col = position[1] - 1
     while valid_move?(board, row, col)
       @next_moves.push([row, col])
       break unless board.positions[row][col] == '.'
+
       row += 1
       col -= 1
     end
 
-    #top right
+    # top right
     row = position[0] + 1
     col = position[1] + 1
     while valid_move?(board, row, col)
       @next_moves.push([row, col])
       break unless board.positions[row][col] == '.'
+
       row += 1
       col += 1
     end
 
-    #bottom left
+    # bottom left
     row = position[0] - 1
     col = position[1] - 1
     while valid_move?(board, row, col)
       @next_moves.push([row, col])
       break unless board.positions[row][col] == '.'
+
       row -= 1
       col -= 1
     end
 
-    #bottom right
+    # bottom right
     row = position[0] - 1
     col = position[1] + 1
     while valid_move?(board, row, col)
       @next_moves.push([row, col])
       break unless board.positions[row][col] == '.'
+
       row -= 1
       col += 1
     end
@@ -78,5 +82,3 @@ class BlackBishop < Bishop
     super([row, col], '♝', 'black')
   end
 end
-
-

@@ -5,34 +5,35 @@ require './lib/pieces/queen'
 require './lib/pieces/king'
 require './lib/pieces/pawn'
 
-class Board 
+class Board
   attr_accessor :positions, :king_positions
 
   def initialize
-    @positions = Array.new(8){ Array.new(8, '.') }
+    @positions = Array.new(8) { Array.new(8, '.') }
     @king_positions = {
       black: [],
-      white: [] 
+      white: []
     }
-		place_all_pieces
-		update_all_pieces_next_moves
+    place_all_pieces
+    update_all_pieces_next_moves
   end
 
-	def place_all_pieces
-		place_all_rooks
+  def place_all_pieces
+    place_all_rooks
     place_all_knights
     place_all_bishops
     place_all_queens
     place_all_kings
     place_all_pawns
-	end
+  end
 
-	def update_all_pieces_next_moves
-		@positions.each do |row|
-			row.each do |piece|
-				next if piece == '.'
+  # Update the next possible moves for all the pieces
+  def update_all_pieces_next_moves
+    @positions.each do |row|
+      row.each do |piece|
+        next if piece == '.'
 
-				if piece.symbol == '♔'
+        if piece.symbol == '♔'
           @king_positions[:white] = piece.position
           next
         end
@@ -42,22 +43,21 @@ class Board
         end
 
         piece.update_next_moves(self)
-			end
-		end
+      end
+    end
+    # Kings are updated last due to their unique square restrictions
     update_both_king_next_moves
-	end
+  end
 
-	def update_both_king_next_moves
+  def update_both_king_next_moves
     white_king = @positions[@king_positions[:white][0]][@king_positions[:white][1]]
     black_king = @positions[@king_positions[:black][0]][@king_positions[:black][1]]
 
-    # Update white king's move
     white_king.update_next_moves(self)
-    # Update black king's move
     black_king.update_next_moves(self)
   end
 
-	def place_all_rooks
+  def place_all_rooks
     @positions[0][0] = WhiteRook.new(0, 0)
     @positions[0][7] = WhiteRook.new(0, 7)
     @positions[7][0] = BlackRook.new(7, 0)
@@ -89,16 +89,16 @@ class Board
   end
 
   def place_all_pawns
-    @positions[1].map!.with_index do |position, index|
+    @positions[1].map!.with_index do |_position, index|
       position = WhitePawn.new(1, index)
     end
-    @positions[6].map!.with_index do |position, index|
+    @positions[6].map!.with_index do |_position, index|
       position = BlackPawn.new(6, index)
     end
   end
 
-	def display
-
+  # Display the board
+  def display
     rank_8 = filter_symbol(@positions[7]).join(' ')
     rank_7 = filter_symbol(@positions[6]).join(' ')
     rank_6 = filter_symbol(@positions[5]).join(' ')
@@ -107,7 +107,7 @@ class Board
     rank_3 = filter_symbol(@positions[2]).join(' ')
     rank_2 = filter_symbol(@positions[1]).join(' ')
     rank_1 = filter_symbol(@positions[0]).join(' ')
-		
+
     puts "
     \e[1;47m\e[1;30m⚉ A B C D E F G H ⚉\e[0m
     \e[1;47m\e[1;30m8 #{rank_8} 8\e[0m
@@ -122,6 +122,7 @@ class Board
     "
   end
 
+  # Convert a row of the board into print-ready output
   def filter_symbol(array)
     array.map do |position|
       if !position.is_a? String
@@ -140,7 +141,7 @@ class Board
       end
     end
 
-    player_color == 'white' ? king_position = king_positions[:black] : king_position = king_positions[:white]
+    king_position = player_color == 'white' ? king_positions[:black] : king_positions[:white]
     opp_king = positions[king_position[0]][king_position[1]]
 
     availible_pieces.each do |piece|
@@ -151,16 +152,16 @@ class Board
         piece.update_position(self, new_position, initial_position)
         update_all_pieces_next_moves
 
-        if !opp_king.in_check?(self)
+        unless opp_king.in_check?(self)
           piece.update_position(self, initial_position, new_position)
           positions[new_position[0]][new_position[1]] = new_piece
-          update_all_pieces_next_moves  
-          return false 
+          update_all_pieces_next_moves
+          return false
         end
 
         piece.update_position(self, initial_position, new_position)
         positions[new_position[0]][new_position[1]] = new_piece
-        update_all_pieces_next_moves  
+        update_all_pieces_next_moves
       end
     end
     true
@@ -199,5 +200,3 @@ end
 # king = WhiteKing.new(0, 4)
 # king.update_next_moves(temp_board)
 # p king.next_moves
-
-# Testing checkmate
