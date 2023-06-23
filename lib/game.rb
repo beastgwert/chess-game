@@ -9,6 +9,7 @@ class Game
     @game_board = Board.new
     @player_human = Player.new
     @player_computer = Computer.new
+    @moves_until_checkmate = 0
     # 0 is white 1 is black
     @cur_move = 0
   end
