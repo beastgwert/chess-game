@@ -144,11 +144,13 @@ class Board
     king_position = player_color == 'white' ? king_positions[:black] : king_positions[:white]
     opp_king = positions[king_position[0]][king_position[1]]
 
+    # check all pieces that can move
     availible_pieces.each do |piece|
       piece.next_moves.each do |new_position|
         new_piece = positions[new_position[0]][new_position[1]]
         initial_position = piece.position
 
+        # simulate moving piece
         piece.update_position(self, new_position, initial_position)
         update_all_pieces_next_moves
 
@@ -159,6 +161,7 @@ class Board
           return false
         end
 
+        # undo simulation
         piece.update_position(self, initial_position, new_position)
         positions[new_position[0]][new_position[1]] = new_piece
         update_all_pieces_next_moves

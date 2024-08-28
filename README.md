@@ -1,5 +1,5 @@
 # chess-game
-Interactive chess game against a computer that makes random from the command line written in Ruby.
+Interactive chess game against a computer that makes random moves from the command line written in Ruby.
 
 
 ## How to Play
@@ -22,7 +22,10 @@ Maintains the rules of chess and individual pieces in various contexts, includin
         - Only possible if opponent's pawn has moved two squares in one move
 - Valid Squares
     - A piece cannot move if the King is in check following the move
+    - A move must be to a square within the capabilities of the piece
 - Checkmate if the player cannot move and is in check
+
+Player can resign by entering the command in the console
 
 
 

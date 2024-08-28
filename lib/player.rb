@@ -15,7 +15,9 @@ class Player
     loop do
       # Obtain starting and ending squares
       initial_position = select_position(board)
+      return "resign" if initial_position == "resign"
       new_position = find_new_position(board, initial_position)
+      return "resign" if new_position == "resign"
       new_piece = board.positions[new_position[0]][new_position[1]]
 
       # Move the piece and update the board
@@ -42,7 +44,7 @@ class Player
     loop do
       puts 'Choose a square that a piece occupies to move (i.e E2)'
       input = gets.chomp
-
+      return "resign" if input == "resign"
       return notation_to_position(input) if verify_select(board, input)
 
       puts "That is an invalid square, please try again\n"
@@ -66,7 +68,7 @@ class Player
     loop do
       puts 'Choose a square to move to'
       input = gets.chomp
-
+      return "resign" if input == "resign"
       return notation_to_position(input) if verify_find(board, input, initial_position)
 
       puts "That is an invalid square, please try again\n"
