@@ -4,7 +4,7 @@ Interactive chess game against a computer that makes random moves from the comma
 
 ## How to Play
 - Clone this repo ([instructions](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/cloning-a-repository))
-- Navigate to the project's directory `cd ruby_chess`
+- Navigate to the project's directory `cd chess-game`
 - `bundle install`
 - `ruby lib/main.rb`
 
